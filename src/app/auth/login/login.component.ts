@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -15,6 +15,8 @@ declare const gapi:any;
 export class LoginComponent implements OnInit {
 
   public formSubmitted = false;
+  public auth2!:any;
+  public document:any;
 
 
   public loginForm = this.fb.group({
@@ -26,7 +28,9 @@ export class LoginComponent implements OnInit {
 
   constructor( private router:Router,
                private fb:FormBuilder,
-               private usuarioServices:UsuarioService) { }
+               private usuarioServices:UsuarioService,
+               private ngZone:NgZone) { }
+
   ngOnInit(): void {
     this.renderButton()
   }
@@ -41,22 +45,22 @@ export class LoginComponent implements OnInit {
       }else{
         localStorage.removeItem('email');
       }
+      //navegacion a dashboard
+      this.router.navigateByUrl('/')
+
 
     }, (err) => {
       //si hay algun error
       Swal.fire('Error',err.error.msg, 'error')
     })
-    //console.log( this.loginForm.value )
+    
 
-   //this.router.navigateByUrl('/')
+  
   }
-  onSuccess(googleUser:any) {
-    var id_token = googleUser.getAuthResponse().id_token;
-    console.log(id_token);
-  }
-  onFailure(error:any) {
-    console.log(error);
-  }
+  //GOOGLE function
+  
+
+  
   renderButton() {
     gapi.signin2.render('my-signin2', {
       'scope': 'profile email',
@@ -64,9 +68,42 @@ export class LoginComponent implements OnInit {
       'height': 50,
       'longtitle': true,
       'theme': 'dark',
-      'onsuccess': this.onSuccess,
-      'onfailure': this.onFailure
     });
+
+    this.startApp();
+
+  };
+
+  async startApp() {
+
+    await this.usuarioServices.gooogleInit();
+    //factorizacion del servicio ----------->
+    this.auth2 = this.usuarioServices.auth2;
+     //id de boton ade google 
+     this.attachSignin(document.getElementById('my-signin2'));
+   
+  };
+
+  attachSignin(element:any) {
+    console.log(element.id);
+    this.auth2.attachClickHandler(element, {},
+        (googleUser: any) => {
+       //tomar token
+       console.log('google',googleUser)
+       const id_token = googleUser.getAuthResponse().id_token;
+       
+       this.usuarioServices.loginGoogle(id_token)
+                           .subscribe(resp => {
+                             //navegar al dashboard
+                             //ngzone es para reparar los enrutados por librerias de terceros
+                             this.ngZone.run(()=>{
+                             this.router.navigateByUrl('/')
+                             })
+                           });
+
+      }, (error:any) => {
+          alert(JSON.stringify(error, undefined, 2));
+        });
   }
 
 }
