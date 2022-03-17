@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Usuario } from 'src/app/models/usuarios.model';
 import { SidebarService } from 'src/app/services/sidebar.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,11 +11,17 @@ import { SidebarService } from 'src/app/services/sidebar.service';
 })
 export class SidebarComponent implements OnInit {
 
+  public usuario!: Usuario;
   menuItems!: any[];
 
-  constructor(private sidebarServices:SidebarService) { 
+
+  constructor(private sidebarServices:SidebarService,
+              private usuarioServices:UsuarioService) { 
+    //como es un get no se nesesita poner llaves 
     this.menuItems = sidebarServices.menu;
-    //console.log(this.menuItems);
+    //instacia del modelo
+    this.usuario   = usuarioServices.usuario;
+    //console.log('menu',this.usuario);
   }
 
   ngOnInit(): void {
