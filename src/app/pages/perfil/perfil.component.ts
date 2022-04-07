@@ -5,6 +5,7 @@ import { FileUploadService } from 'src/app/services/file-upload.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
 import { Usuario } from 'src/app/models/usuarios.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil',
@@ -17,6 +18,7 @@ export class PerfilComponent implements OnInit {
   public perfilForm!: FormGroup;
   public usuario!:Usuario;
   public imagenSubir!:File;
+  public imgTemp: any = null;
 
   constructor(private fb: FormBuilder,
               private usuarioServices:UsuarioService,
@@ -42,18 +44,45 @@ export class PerfilComponent implements OnInit {
                            const {nombre, email} = this.perfilForm.value;
                            this.usuario.nombre = nombre;
                            this.usuario.email = email;
-                         })
+
+                           Swal.fire('Guardado','Cambios fueron guardados','success');
+                         }, (err) => {
+                           Swal.fire('Error',err.error.msg,'error');
+                           console.log()
+                         });
   }
 
-  cambiarImagen( event:any ){
-    console.log();
-    this.imagenSubir = event.target.files[0]
+  cambiarImagen( file:any|undefined):any{
+   const file2 = file.target.files[0]
+    this.imagenSubir = file2
+    //codigo para guardar temporal mente la img y saber si es la q qquiere el clinete inicio
+    if(!file2){
+      return this.imgTemp = '';
+    }
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL( file2 );
+
+    reader.onloadend = () => {
+       this.imgTemp = reader.result;
+       console.log(reader.result);
+     }
+  //codigo para guardar temporal mente la img y saber si es la q qquiere el clinete end
+
+
+
   }
 
   subirImagen(){
     this.fileUploadServices
         .actualizarFoto(this.imagenSubir, 'usuarios', this.usuario.uid! )
-        .then(img => console.log(img))
+        .then(img => {
+          this.usuario.img = img
+          Swal.fire('Guardado','Imagen de usuario actualizado','success');
+        }).catch(err =>{
+          Swal.fire('Error','No se puedo subir la imagen','error');
+        })
   }
 
 }

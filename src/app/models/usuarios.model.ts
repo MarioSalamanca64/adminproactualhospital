@@ -5,7 +5,7 @@ const base_url = environment.base_url;
 
 export class Usuario{
 
-    constructor(
+        constructor(
        public nombre :string,
        public email :string,
        public password:string,
