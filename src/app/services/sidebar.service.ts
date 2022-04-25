@@ -17,7 +17,17 @@ export class SidebarService {
         {titulo: 'rxjs', url: 'rxjs'},
 
       ]
-    }
+    },
+    {
+      titulo: 'Dashboard',
+      icono:  'mdi mdi-folder-lock-open',
+      submenu: [
+        {titulo: 'Usuarios', url: 'usuarios'},
+        {titulo: 'hospitales', url: 'hospitales'},
+        {titulo: 'Medicos', url: 'medicos'},
+
+      ]
+    },
 
   ];
 

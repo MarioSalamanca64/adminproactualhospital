@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
-import { catchError, map, tap } from 'rxjs/operators'
+import { catchError, delay, map, tap } from 'rxjs/operators'
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 import { environment } from 'src/environments/environment';
 
@@ -10,6 +11,7 @@ import { LoginForm } from '../interfaces/login-form.interface';
 import { RegisterForm } from '../interfaces/register-form.interface';
 
 import { Usuario } from '../models/usuarios.model';
+import { CargarUsuario } from '../interfaces/cargar-ususarios.interface';
 
 const base_url = environment.base_url;
 declare const gapi:any
@@ -33,6 +35,13 @@ export class UsuarioService {
   }
   get uid():string {
     return this.usuario.uid || '';
+  }
+  get headers(){
+    return {
+      headers:{
+        'x-token': this.token
+      }
+    }
   }
 
   gooogleInit(){
@@ -117,16 +126,12 @@ export class UsuarioService {
   actualizarPerfil( data:{ email:string, nombre:string, role:any }){
     //hay que mandar tanbien el rol 
     //ladata es = a todo lo que tare la data + el rol
-    data = {
-      ...data,
-      role: this.usuario.role
-    };
+     data = {
+       ...data,
+       role: this.usuario.role
+     };
 
-    return this.http.put(`${base_url}/usuarios/${this.uid}`, data, {
-      headers:{
-        'x-token': this.token
-      }
-    } )
+    return this.http.put(`${base_url}/usuarios/${this.uid}`, data, this.headers)
 
   }
 
@@ -151,6 +156,40 @@ export class UsuarioService {
                           console.log(resp)
                            localStorage.setItem('token', resp.token)
                        }));
+  }
+
+  cargarUsuarios(desde: number = 0) {
+
+    const url = `${base_url}/usuarios?desde=${desde}`;
+    //muestra el total de usuarios  
+    return this.http.get<CargarUsuario>(url,this.headers)
+                    //este pipe se usa para motrsra las img de los avtares
+                    .pipe(
+                      //hace que demore 5 sec
+                      delay(500),
+                      map(resp => {
+                        const usuarios = resp.usuarios.map(
+                          //nueva instanacia para cambiar la data  tenemos un areglo de usuarios
+                          user => new Usuario(user.nombre,user.email,'',user.img,user.google,user.role,user.uid)
+                          );
+                          
+                        return {
+                          total: resp.total,
+                          usuarios
+                        };
+                      })
+                    )
+  }
+  eliminarUsuario( usuario: Usuario ){
+
+    //usuarios/6153d7a1ca7e2688ccdcf7a2
+    const url = `${base_url}/usuarios/${usuario.uid}`;
+    return this.http.delete(url,this.headers);
+  }
+
+  guardarUsuario( usuario:Usuario){
+
+    return this.http.put(`${base_url}/usuarios/${usuario.uid}`, usuario, this.headers)
 
   }
   

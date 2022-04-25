@@ -19,6 +19,8 @@ import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
 import { PerfilComponent } from './perfil/perfil.component';
 
+import { UsuariosComponent } from './mantenimientos/usuarios/usuarios.component';
+
 
 
 @NgModule({
@@ -30,7 +32,8 @@ import { PerfilComponent } from './perfil/perfil.component';
      AccountSettingsComponent,
      PromesasComponent,
      RxjsComponent,
-     PerfilComponent
+     PerfilComponent,
+     UsuariosComponent
   ],
   exports: [
     DashboardComponent,

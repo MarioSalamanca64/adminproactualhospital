@@ -18,15 +18,19 @@ export class Usuario{
         console.log(this.img);
     }
     get imagenUrl() {
+
+        if(!this.img){
+            return `${base_url}/uploads/usuarios/no-imagen`;
+        }
         
         //para el caso de imagenes de google
-        if(this.img?.includes('https')){
+        else if(this.img?.includes('https')){
             //si tiene https si no se se siga este https es loque trae google la respuesta 
             return this.img;
             console.log(this.img)
         }
         //vers i tiene foto si no mandar el no imagen
-         if(this.img){
+        else if(this.img){
              return `${base_url}/uploads/usuarios/${this.img}`
          }
          else{
