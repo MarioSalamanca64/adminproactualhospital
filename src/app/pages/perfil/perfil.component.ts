@@ -69,9 +69,6 @@ export class PerfilComponent implements OnInit {
        console.log(reader.result);
      }
   //codigo para guardar temporal mente la img y saber si es la q qquiere el clinete end
-
-
-
   }
 
   subirImagen(){
