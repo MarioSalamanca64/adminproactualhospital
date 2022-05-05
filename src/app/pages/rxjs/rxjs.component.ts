@@ -80,7 +80,7 @@ export class RxjsComponent implements OnInit, OnDestroy {
     });
 
     return obs$;
-
   }
+  
 
 }

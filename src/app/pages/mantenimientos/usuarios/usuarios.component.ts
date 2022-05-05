@@ -29,13 +29,14 @@ export class UsuariosComponent implements OnInit , OnDestroy{
   constructor(private usuarioServices:UsuarioService,
               private busquedasService:BusquedasService,
               private modalImagenService:ModalImagenService) { }
+
   ngOnDestroy(): void {
     this.imgSubs.unsubscribe
   }
 
   ngOnInit(): void {
     this.cargarUsuarios();
-
+    //delay es parta uqe carge la imagen  yt es un valor que se emite desde otro componente es ques modal imagen
     this.imgSubs = this.modalImagenService.nuevaImagen.pipe(
       delay(100)
     )
@@ -76,7 +77,7 @@ export class UsuariosComponent implements OnInit , OnDestroy{
     }
     
     this.busquedasService.buscar('usuarios',termino)
-                          .subscribe(resultado => {
+                          .subscribe((resultado:any) => {
                             this.usuarios = resultado
                           })
                     

@@ -4,6 +4,8 @@ import { map } from 'rxjs/operators';
 import { pipe } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Usuario } from '../models/usuarios.model';
+import { Hospital } from '../models/hospital.model';
+import { Medico } from '../models/medico.model';
 
 const base_url = environment.base_url;
 
@@ -29,11 +31,23 @@ export class BusquedasService {
   }
 
   private transformarUsuarios( resultado: any[]): Usuario[]{
-
     return resultado.map(
       user =>  new Usuario(user.nombre,user.email,'',user.img,user.google,user.role,user.uid)
     );
   }
+
+  private transformarHospitales( resultado: any[]): Hospital[]{
+    //no usa la instancia por qque la img ya la llamos en otra parte  en el caso de hospitales
+    return resultado
+  }
+
+  private transformarMedicos( resultado: any[]): Medico[]{
+    //no usa la instancia por qque la img ya la llamos en otra parte  en el caso de hospitales
+    return resultado
+  }
+
+
+
 
   buscar( 
     tipo:'usuarios'|'medicos'|'hospitales',
@@ -50,6 +64,12 @@ export class BusquedasService {
 
                           case 'usuarios':
                             return this.transformarUsuarios(resp.resultado)
+
+                          case 'hospitales':
+                            return this.transformarHospitales(resp.resultado)
+
+                          case 'medicos':
+                            return this.transformarMedicos(resp.resultado)
                                          
                           default:
                             return [];
