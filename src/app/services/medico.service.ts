@@ -35,6 +35,17 @@ export class MedicoService {
                      );              
   } 
 
+  obtenerMedicoPorId(id:string){
+
+    const url = `${base_url}/medicos/${id}`;
+    //muestra el total de usuarios  
+    return this.http.get<any>(url,this.headers)
+                     .pipe(
+                       map((resp:{ok:boolean,medico:Medico}) => resp.medico)
+                     );      
+
+  }
+
   crearMedico( medico:{ nombre:string,hospital:string } ) {
 
     const url = `${base_url}/medicos`;
