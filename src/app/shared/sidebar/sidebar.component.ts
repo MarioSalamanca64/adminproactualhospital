@@ -15,16 +15,21 @@ export class SidebarComponent implements OnInit {
   public menuItems!: any[];
 
 
-  constructor(private sidebarServices:SidebarService,
+  constructor(public sidebarServices:SidebarService,
               private usuarioServices:UsuarioService) { 
-    //como es un get no se nesesita poner llaves 
-    this.menuItems = sidebarServices.menu;
+    //como es un get no se nesesita poner llaves forma antigua de traer el menu lateral
+    //this.menuItems = sidebarServices.menu;
     //instacia del modelo
-    this.usuario   = usuarioServices.usuario;
     //console.log('menu',this.usuario);
+    this.usuario   = usuarioServices.usuario;
+    
+    
   }
-
+  
   ngOnInit(): void {
+    //muestra menu del sidebar
+    this.menuItems = this.sidebarServices.menu
+    
   }
 
 }

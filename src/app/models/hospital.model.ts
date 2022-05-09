@@ -12,7 +12,7 @@ export class Hospital {
     constructor(
         public nombre:string,
         public _id?:any,
-        public img?:string,
+        public img?:any,
         public usuario?:_HospitalUser,        
     ){
 

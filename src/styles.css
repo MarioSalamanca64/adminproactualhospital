@@ -22,6 +22,9 @@
   width:  200px;
 }
 /* para que re corte sietas letras de los correos */
+.w75{
+  width: 75px;
+}
 .w100{
   width: 100px;
 }

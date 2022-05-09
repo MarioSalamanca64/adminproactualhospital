@@ -33,6 +33,11 @@ export class UsuarioService {
   get token () {
     return localStorage.getItem('token') || '';
   }
+  //aqui podemos decir que que tipo de rol tiene para no dejarlo pasar alos que no son admin role 
+  get role():'ADMIN_ROLE'|'USER_ROLE' | undefined {
+    return this.usuario.role
+  }
+
   get uid():string {
     return this.usuario.uid || '';
   }
@@ -59,8 +64,18 @@ export class UsuarioService {
     })
   }             
 
+  guardarLocalStorage(token:string, menu:any){
+        //quiobtenemos la informacion ates de que enttre al login
+        localStorage.setItem('token', token);
+        //creacion del menu en el local
+        localStorage.setItem('menu', JSON.stringify(menu));
+  }
+
   logout(){
     localStorage.removeItem('token');
+
+    //borrar menu
+    localStorage.removeItem('menu');
     
     //this.auth2 = gapi.auth2.getAuthInstance();
     this.auth2.signOut().then(() => {
@@ -96,8 +111,7 @@ export class UsuarioService {
       //nota esto se usa para prubas--------------------------
       this.usuario.imprimirUsuario();
 
-      //quiobtenemos la informacion ates de que enttre al login
-      localStorage.setItem('token', resp.token);
+      this.guardarLocalStorage(resp.token,resp.menu);
       return true;
       }),
       //map trasforma a booleano y manda un true si trae la informacion del token 
@@ -118,8 +132,7 @@ export class UsuarioService {
                     .pipe(
                       //tap es como sigiente paso 
                      tap( ( resp:any ) => {
-                          localStorage.setItem('token', resp.token)
-                          
+                      this.guardarLocalStorage(resp.token,resp.menu);       
                       }));
   }
 
@@ -141,7 +154,7 @@ export class UsuarioService {
                     .pipe(
                        //tap es como sigiente paso 
                       tap( ( resp:any ) => {
-                           localStorage.setItem('token', resp.token)
+                        this.guardarLocalStorage(resp.token,resp.menu);
                        }));
 
   }
@@ -154,7 +167,7 @@ export class UsuarioService {
                        //tap es como sigiente paso 
                       tap( ( resp:any ) => {
                           console.log(resp)
-                           localStorage.setItem('token', resp.token)
+                          this.guardarLocalStorage(resp.token,resp.menu);
                        }));
   }
 

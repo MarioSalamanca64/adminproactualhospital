@@ -9,9 +9,9 @@ export class Usuario{
        public nombre :string,
        public email :string,
        public password:string,
-       public img?:string,
+       public img?:any,
        public google?:boolean,
-       public role?:string,
+       public role?:'ADMIN_ROLE'|'USER_ROLE',
        public uid?:string,
     ){}
     imprimirUsuario(){
