@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2'
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -25,7 +25,7 @@ export class RegisterComponent {
   });
 
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private usuariosServices:UsuarioService,
               private router:Router) { }
 
@@ -75,7 +75,7 @@ export class RegisterComponent {
   //reutilizable
   passwordsIguales( pass1Name: string, pass2Name: string ):any{
 
-    return ( formGroup: FormGroup ) => {
+    return ( formGroup: UntypedFormGroup ) => {
       //para desir que si son iguales pase si no no 
       const pass1Control = formGroup.get(pass1Name);
       const pass2Control = formGroup.get(pass2Name);
